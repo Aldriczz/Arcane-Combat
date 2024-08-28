@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+
+    .crosshair{
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+    }
+
+    #level{
+        position: absolute;
+        font-size: 60px;
+        color: white;
+        top: 5px;
+        right: 5px;
+        opacity: 60%;
+        display: none;
+    }
+
+    #ammo{
+        position: absolute;
+        font-size: 60px;
+        color: rgb(255, 136, 0);
+        bottom: 5px;
+        right: 5px;
+        opacity: 60%;
+        display: none;
+    }
+
+    #bossHealthBarFrame{
+        position: absolute;
+        width: 80%;
+        height: 20px;
+        background-color: rgb(255, 255, 255);
+        bottom: 10%;
+        left: 10%;
+        display: none;
+    }
+
+    #bossHealthBar{
+        position: absolute;
+        width: 100%;
+        height: 20px;
+        background-color: rgb(255, 0, 0);
+    }
+
+    #bossHealthBarBorder{
+        position: absolute;
+        width:100%;
+        height: 19px;
+        border: 2px solid black;
+    }
+
+    #playerHealthBarFrame{
+        position: absolute;
+        width: 20%;
+        height: 20px;
+        background-color: rgb(255, 255, 255);
+        top: 5px;
+        left: 5px;
+        display: none;
+    }
+
+    #playerHealthBar{
+        position: absolute;
+        width: 100%;
+        height: 20px;
+        background-color: rgb(255, 0, 0);
+    }
+
+    #playerHealthBarBorder{
+        position: absolute;
+        width: 99%;
+        height: 18px;
+        border: 2px solid black;
+    }
+
+    .popup-text {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 50px;
+        color: rgb(112, 60, 0);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        display: none; 
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .instruction{
+        width: 10%;
+        position: absolute;
+        top: 85%;
+        left: 8%;
+        transform: translate(-50%, -50%);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .button{
+        opacity: 50%;
+        width: 20px;
+        height: 20px;
+        background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        font-size:20px;
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 10px;
+    }   
+    #down{
+        display: flex;
+    }
+
+    #flash{
+        top: 85%;
+        left: 16%;
+        position: absolute; 
+    }
+
+    #titleControl{
+        position: absolute;
+        top: 70%;
+        left: 6%;
+        font-size: 20px;
+        color: white;
+        opacity: 50%;
+    }   
+
+    #titleFlash{
+        position: absolute;
+        top: 80%;
+        left: 15%;
+        font-size: 20px;
+        color: white;
+        opacity: 50%;
+    }   
+
+    #titleShoot{
+        position: absolute;
+        top: 85%;
+        left: 33%;
+        font-size: 20px;
+        color: white;
+        opacity: 50%;
+    }
+
+    #leftClick{
+        position: absolute;
+        top: 90%;
+        left: 33%;
+        font-size: 20px;
+        color: white;
+        opacity: 50%;
+    }
+
+    #titleReload{
+        position: absolute;
+        top: 80%;
+        left: 25%;
+        font-size: 20px;
+        color: white;
+        opacity: 50%;
+    }
+
+    #reload{
+        position: absolute;
+        top: 85%;
+        left: 25%;
+        font-size: 20px;
+        color: black;
+        opacity: 50%;
+    }
+
+    #start{
+        position: absolute;
+        top: 90%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+        font-size: 50px;
+        color: white;
+        opacity: 50%;
+    }
+
+</style>
+<body>
+    <section id="intro">
+        <div class="instruction">
+            <div id="up">
+                <div class="button">W</div>
+            </div>
+            <div id="down">
+                <div class="button">A</div>
+                <div class="button">S</div>
+                <div class="button">D</div>
+            </div>
+        </div>
+        <div class="button" id="flash">F</div>
+        <div id="titleControl">Move:</div>
+        <div id="titleFlash">Flash Light:</div>
+        <div id="titleShoot">Shoot:</div>
+        <div id="leftClick">Left Click</div>
+        <div id="titleReload">Reload:</div>
+        <div class="button" id="reload">R</div>
+        <div id="start">Press Space To Play</div>
+    </section>
+    <div id="level"></div>
+    <div id="ammo"></div>
+    <div id="bossHealthBarFrame"><div id="bossHealthBar"></div><div id="bossHealthBarBorder"></div></div>
+    <div id="playerHealthBarFrame"><div id="playerHealthBar"></div><div id="playerHealthBarBorder"></div></div>
+    <div class="popup-text"></div>
+    <img class="crosshair" src="./assets/texture/crosshair.png" alt="">
+</body>
+<script type="module" src="script.js"></script>
+</html>
