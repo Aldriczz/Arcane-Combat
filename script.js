@@ -23,6 +23,11 @@ let scene,
   bossAction,
   changeAct = false,
   bossDeadFlag = false,
+  backSound,
+  backSoundBoss,
+  shotSoundBuffer,
+  reloadSound,
+  listener,
   levPopUp = document.querySelector(".popup-text");
 let actionReload;
 let spotLight;
@@ -212,6 +217,7 @@ class Player {
           isCollectBullet === false
         ) {
           totalAmmo = 210;
+          ammoDiv.innerHTML = ammo + " / " + totalAmmo;
           scene.remove(bulletSupply);
           isCollectBullet = true;
         } else if (
@@ -482,6 +488,8 @@ class Boss {
       boss.action.time = 114.5;
     }else if(boss.action.time > 25.8 && boss.currentAction === "die" && bossDeadFlag === true){
       scene.remove(this.model);
+      backSoundBoss.stop();
+      backSound.play();
       bossBarMain.style.display = "none";
       this.isAlive = false;
       enemies.forEach((enemy) => {
@@ -675,6 +683,7 @@ window.addEventListener("keydown", (e) => {
   }
   if (currentCamera === camera1) {
     renderer.domElement.requestPointerLock();
+    // shotSoundTrigger();
   }
   if (gameOver === false) {
     switch (input.toLowerCase()) {
@@ -795,7 +804,7 @@ const createBullet = () => {
 const createPlane = (width, height) => {
   let plane = new THREE.PlaneGeometry(width, height);
   let material = new THREE.MeshStandardMaterial({
-    color: "gray",
+    color: "#223100",
     side: THREE.DoubleSide,
   });
   let mesh = new THREE.Mesh(plane, material);
@@ -923,11 +932,10 @@ const init = () => {
 
     model.traverse((object) => {
       if (object.isMesh) {
-        object.fog = false;
         object.receiveShadow = true;
       }
     });
-    model.scale.set(1.3, 0.5, 1.3);
+    model.scale.set(1.4, 0.5, 1.4);
     model.position.set(110, 2, 70);
     scene.add(model);
   });
@@ -963,7 +971,7 @@ const init = () => {
   let sky = new THREE.Mesh(skyBox, skyMaterial);
   scene.add(sky);
 
-  let platform = createPlane(200, 200);
+  let platform = createPlane(500, 500);
   platform.rotation.x = Math.PI / 2;
   platform.receiveShadow = true;
   platform.position.set(100, 0, 100);
@@ -1000,6 +1008,8 @@ const init = () => {
 
   objects.forEach((obj) => {
     scene.add(obj);
+    obj.shadowCast = true; 
+    
   });
 };
 
@@ -1087,6 +1097,7 @@ const checkReload = () => {
 const animate = () => {
   if (ammo === 0 && isReload === false && totalAmmo > 0) {
     reload();
+    reloadSound.play();
   }
   if (isReload) {
     checkReload();
@@ -1264,6 +1275,8 @@ const levelUp = () => {
   showLevelUpPopup();
 
   if (level % 3 == 0) {
+    backSound.stop();
+    backSoundBoss.play();
     boss.isAlive = true;
     scene.add(boss.model);
     boss.health = 5000 * level / 3;
@@ -1295,10 +1308,11 @@ window.addEventListener("resize", () => {
 window.addEventListener("keypress", (e) => {
   if (e.key.charCodeAt(0) === 32) {
     if(currentCamera === camera3){
+      initAudio();
       currentCamera = camera1;
       let healthBar = document.querySelector("#playerHealthBarFrame");
       let intro = document.querySelector("#intro");
-      let crossHair = document.querySelector(".crosshair);
+      let crossHair = document.querySelector(".crosshair");
       crossHair.style.display = "flex";
       intro.style.display = "none";
       title.visible = false; 
@@ -1334,5 +1348,60 @@ window.addEventListener("mousemove", (e) => {
 window.addEventListener("mouseup", (e) => {
   if (currentCamera === camera1) {
     player.shoot();
+  }
+});
+
+let initAudio = () => {
+  listener = new THREE.AudioListener();
+  camera3.add(listener);
+  camera1.add(listener);
+  camera2.add(listener);
+
+  backSound = new THREE.Audio(listener);
+  const audioLoader = new THREE.AudioLoader();
+  audioLoader.load("./assets/sound/Eternal City.mp3", (buffer) => {
+    backSound.setBuffer(buffer);
+    backSound.setLoop(true);
+    backSound.setVolume(1);
+    backSound.play();
+  });
+
+  const audioLoader2 = new THREE.AudioLoader();
+  audioLoader2.load("./assets/sound/shot.mp3", (buffer2) => {
+    shotSoundBuffer = buffer2;
+  });
+
+  backSoundBoss = new THREE.Audio(listener);
+  const audioLoader3 = new THREE.AudioLoader();
+  audioLoader3.load("./assets/sound/Fallingstar Beast.mp3", (buffer3) => {
+    backSoundBoss.setBuffer(buffer3);
+    backSoundBoss.setLoop(true);
+    backSoundBoss.setVolume(1);
+  });
+
+  reloadSound = new THREE.Audio(listener);
+  const audioLoader4 = new THREE.AudioLoader();
+  audioLoader4.load("./assets/sound/reload.mp3", (buffer4) => {
+    reloadSound.setBuffer(buffer4);
+    reloadSound.setLoop(false);
+    reloadSound.setVolume(0.5);
+  });
+
+};
+
+  
+
+let shotSoundTrigger = () =>{
+  if(shotSoundBuffer){
+    let shotSound = new THREE.Audio(listener);
+    shotSound.setBuffer(shotSoundBuffer);
+    shotSound.setVolume(0.2);
+    shotSound.play();
+  }
+} 
+
+document.addEventListener("click", () => {
+  if(currentCamera === camera1 && gameOver === false && isReload === false && ammo > 0){
+    shotSoundTrigger();
   }
 });
